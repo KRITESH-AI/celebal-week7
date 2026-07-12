@@ -1,5 +1,10 @@
 # 📄 Document Question Answering System using Retrieval-Augmented Generation (RAG)
 
+## 🚀 Live Demo
+
+**Streamlit App:**  
+https://kritesh-ai-celebal-week7-streamlit-app-zuvxol.streamlit.app/
+
 ## 📌 Overview
 
 This project implements a **Retrieval-Augmented Generation (RAG)** based Document Question Answering system that enables users to ask questions over their own documents such as PDFs and text files.
