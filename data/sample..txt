@@ -1,0 +1,7 @@
+Retrieval-Augmented Generation (RAG) combines retrieval with language generation.
+
+Embeddings convert text into vectors.
+
+FAISS is used for semantic similarity search.
+
+Chunking improves retrieval performance.
