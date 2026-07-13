@@ -3,18 +3,47 @@ from utils.retriever import Retriever
 from utils.generator import AnswerGenerator
 
 
+# -------------------------------
+# Page Configuration
+# -------------------------------
+
 st.set_page_config(
     page_title="Document Question Answering (RAG)",
     page_icon="📄",
     layout="wide"
 )
 
-st.title("Document Question Answering System (RAG)")
+st.title("📄 Document Question Answering System (RAG)")
+
 st.markdown(
-    "Ask questions from your uploaded PDF or TXT documents using **Retrieval-Augmented Generation (RAG)**."
+    """
+Ask questions from your uploaded **PDF** or **TXT** documents using
+**Retrieval-Augmented Generation (RAG)**.
+"""
+)
+
+# -------------------------------
+# Indexed Documents
+# -------------------------------
+
+st.info(
+    """
+### 📂 Currently Indexed Documents
+
+- 📄 AI.pdf
+- 📄 Resume.pdf
+- 📄 sample.txt
+
+Ask questions related to these documents.
+"""
 )
 
 st.divider()
+
+
+# -------------------------------
+# Load Components
+# -------------------------------
 
 @st.cache_resource
 def load_components():
@@ -25,12 +54,31 @@ def load_components():
 
 try:
     retriever, generator = load_components()
+
 except Exception as e:
     st.error(f"Failed to load the RAG pipeline.\n\n{e}")
     st.stop()
 
 
+# -------------------------------
+# Sidebar
+# -------------------------------
+
 st.sidebar.header("Retrieval Settings")
+
+st.sidebar.subheader("📂 Indexed Documents")
+
+st.sidebar.markdown("""
+- 📄 **AI.pdf**
+- 📄 **Resume.pdf**
+- 📄 **sample.txt**
+""")
+
+st.sidebar.info(
+    "Ask questions related to the above indexed documents."
+)
+
+st.sidebar.divider()
 
 top_k = st.sidebar.slider(
     "Top-K Retrieval",
@@ -48,20 +96,30 @@ st.sidebar.divider()
 
 st.sidebar.subheader("System Information")
 
-st.sidebar.write("**Embedding Model:**")
+st.sidebar.write("**Embedding Model**")
 st.sidebar.caption("Sentence-Transformers (all-MiniLM-L6-v2)")
 
-st.sidebar.write("**Vector Database:**")
+st.sidebar.write("**Vector Database**")
 st.sidebar.caption("FAISS (IndexFlatIP - Cosine Similarity)")
 
-st.sidebar.write("**Language Model:**")
+st.sidebar.write("**Language Model**")
 st.sidebar.caption("Google FLAN-T5 Base")
 
-st.sidebar.success("Vector Database Loaded")
+st.sidebar.success("✅ Vector Database Loaded")
+
+
+# -------------------------------
+# User Input
+# -------------------------------
 
 question = st.text_input(
     "Ask your question"
 )
+
+
+# -------------------------------
+# Generate Answer
+# -------------------------------
 
 if st.button("Generate Answer", use_container_width=True):
 
@@ -77,7 +135,9 @@ if st.button("Generate Answer", use_container_width=True):
         )
 
     if not retrieved_chunks:
-        st.warning("No relevant information was found.")
+        st.warning(
+            "No relevant information was found in the indexed documents."
+        )
         st.stop()
 
     answer = generator.generate_answer(
@@ -88,7 +148,6 @@ if st.button("Generate Answer", use_container_width=True):
     st.subheader("Answer")
 
     st.success(answer)
-
 
     if show_context:
 
@@ -105,6 +164,7 @@ if st.button("Generate Answer", use_container_width=True):
                 st.caption(
                     f"Similarity Score: {chunk['similarity']:.4f}"
                 )
+
 
 st.divider()
 
